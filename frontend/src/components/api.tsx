@@ -1,4 +1,6 @@
-const BASE_URL = 'http://localhost:5000';
+// const BASE_URL = import.meta.env.BASE_URL ||process.env.BASE_URL;
+const BASE_URL = 'https://foodorderingapp-1.onrender.com';
+// const BASE_URL = 'http://localhost:5000';
 
 // interface UserCredentials {
 //   username: string;
@@ -93,7 +95,7 @@ export const getOrdersByDate = async (date: string): Promise<any[]> => {
   return response.json();
 };
 
-export const createOrder = async (orderData: OrderData): Promise<OrderData> => {
+export const createOrder = async (orderData: OrderData|any): Promise<OrderData> => {
   const response = await fetch(`${BASE_URL}/api/orders`, {
     method: 'POST',
     headers: {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { createProduct, getAllProducts } from './api';
 import { useNavigate } from 'react-router-dom';
+import { toast} from 'react-toastify';
 
 function CreateProduct() {
   const [name, setName] = useState('');
@@ -28,12 +29,12 @@ function CreateProduct() {
     e.preventDefault();
     try {
       await createProduct({ name, price: parseFloat(price) });
-      alert('Product created successfully');
+      toast.success('Product created successfully');
       setName('');
       setPrice('');
       fetchProducts();
     } catch (error) {
-      alert('Failed to create product');
+      toast.error('Failed to create product');
       if ((error as any).message.includes('Unauthorized')) {
         navigate('/login');
       }

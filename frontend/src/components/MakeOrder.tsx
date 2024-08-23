@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getAllProducts, createOrder } from './api';
+import { getAllProducts, createOrder, getOrdersByDate } from './api';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 interface Product {
   _id: string;
@@ -8,23 +9,36 @@ interface Product {
   price: number;
 }
 
-// interface OrderData {
-//   products: {
-//     productId: string;
-//     quantity: number;
-//   }[];
-//   total: number;
-// }
+interface OrderProduct {
+  product: Product;
+  quantity: number;
+}
+
+interface Order {
+  _id: string;
+  user: {
+    username: string;
+  };
+  products: OrderProduct[];
+  total: number;
+  date: string;
+}
 
 function MakeOrder() {
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<Record<string, number>>({});
   const [total, setTotal] = useState(0);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
   }, []);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [selectedDate]);
 
   const fetchProducts = async () => {
     try {
@@ -35,6 +49,16 @@ function MakeOrder() {
       if (error.message.includes('Unauthorized')) {
         navigate('/login');
       }
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      const data: Order[] = await getOrdersByDate(selectedDate);
+      setOrders(data);
+    } catch (error: any) {
+      console.error('Error fetching orders:', error);
+      toast.error('Failed to fetch orders');
     }
   };
 
@@ -60,15 +84,16 @@ function MakeOrder() {
   const handleCheckout = async () => {
     try {
       const productsArray = Object.entries(selectedProducts).map(([productId, quantity]) => ({
-        productId,
+        product: productId,
         quantity,
       }));
 
       await createOrder({ products: productsArray, total });
-      alert('Order created successfully');
+      toast.success('Order created successfully');
       setSelectedProducts({});
+      fetchOrders(); // Refresh orders after creating a new one
     } catch (error: any) {
-      alert('Failed to create order');
+      toast.error('Failed to create order');
       if (error.message.includes('Unauthorized')) {
         navigate('/login');
       }
@@ -82,10 +107,10 @@ function MakeOrder() {
         <div>
           <h3 className="text-xl mb-4">Available Products</h3>
           <ul>
-            {products.map((product) => (
-              <li key={product._id} className="mb-2 flex items-center justify-between">
+            {products?.map((product) => (
+              <li key={product?._id} className="mb-2 flex items-center justify-between">
                 <span>
-                  {product.name} - ${product.price}
+                  {product?.name} - ${product?.price}
                 </span>
                 <div>
                   <button
@@ -94,9 +119,9 @@ function MakeOrder() {
                   >
                     -
                   </button>
-                  <span>{selectedProducts[product._id] || 0}</span>
+                  <span>{selectedProducts[product?._id] || 0}</span>
                   <button
-                    onClick={() => handleQuantityChange(product._id, 1)}
+                    onClick={() => handleQuantityChange(product?._id, 1)}
                     className="px-2 py-1 bg-green-500 text-white rounded ml-2"
                   >
                     +
@@ -113,7 +138,7 @@ function MakeOrder() {
               const product = products.find((p) => p._id === productId);
               return product ? (
                 <li key={productId} className="mb-2">
-                  {product.name} - Quantity: {quantity} - Subtotal: ${product.price * quantity}
+                  {product?.name} - Quantity: {quantity} - Subtotal: ${product?.price * quantity}
                 </li>
               ) : null;
             })}
@@ -126,6 +151,31 @@ function MakeOrder() {
             Checkout
           </button>
         </div>
+      </div>
+
+      <div className="mt-8">
+        <h3 className="text-xl mb-4">Orders by Date</h3>
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="mb-4 p-2 border rounded"
+        />
+        <ul>
+          {orders?.map((order) => (
+            <li key={order._id} className="mb-4 p-4 border rounded">
+              <p className="font-bold">Username: {order?.user?.username}</p>
+              <ul className="ml-4">
+                {order?.products.map((product, index) => (
+                  <li key={index}>
+                    {product?.product?.name} - x {product?.quantity} - Price: ${product?.product?.price}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2">Total: ${order?.total.toFixed(2)}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

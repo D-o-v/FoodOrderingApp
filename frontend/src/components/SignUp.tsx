@@ -1,8 +1,9 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signUp } from './api';
+import { toast } from 'react-toastify';
 
-function SignUp() {
+function SignUp({ setIsAuthenticated }:any) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -11,16 +12,17 @@ function SignUp() {
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      toast.info('Passwords do not match');
       return;
     }
     try {
-        const { token } = await signUp(username, password)
-        sessionStorage.setItem('token', token);
-        navigate('/make-order');
-      } catch (error) {
-        alert('Login failed');
-      }
+      const { token } = await signUp(username, password);
+      sessionStorage.setItem('token', token);
+      setIsAuthenticated(true);
+      navigate('/order');
+    } catch (error) {
+      toast.error('Sign up failed');
+    }
   };
 
   return (
@@ -52,7 +54,7 @@ function SignUp() {
           Sign Up
         </button>
         <p className="mt-4">
-          Already have an account? <Link to="/" className="text-blue-500">Login</Link>
+          Already have an account? <Link to="/login" className="text-blue-500">Login</Link>
         </p>
       </form>
     </div>

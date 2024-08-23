@@ -2,97 +2,84 @@ import { BrowserRouter as Router, Route, Routes, Navigate, NavLink } from 'react
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import CreateProduct from './components/CreateProduct';
-import GetAllOrders from './components/GetAllOrders';
 import MakeOrder from './components/MakeOrder';
-import GetAll from './components/GetAll'
+import { useEffect, useState } from 'react';
 
 function App() {
-  // This should be set to true when the user is authenticated
-  const isAuthenticated = sessionStorage.getItem("token"); // Replace with actual authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    setIsAuthenticated(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    setIsAuthenticated(false);
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/signup" element={<SignUp setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    );
+  }
 
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route
-          path="/*"
-          element={
-            isAuthenticated ? (
-              <AuthenticatedApp />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
-      </Routes>
+      <div className="flex min-h-screen bg-gray-100">
+        {/* Sidebar */}
+        <nav className="w-64 bg-white shadow-md flex flex-col">
+          <div className="p-4 flex-grow">
+            <h1 className="text-2xl font-bold mb-4">Delivery App</h1>
+            <ul>
+              <li className="mb-2">
+                <NavLink 
+                  to="/order" 
+                  className={({ isActive }) => 
+                    isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
+                  }
+                >
+                  Order
+                </NavLink>
+              </li>
+              <li className="mb-2">
+                <NavLink 
+                  to="/product" 
+                  className={({ isActive }) => 
+                    isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
+                  }
+                >
+                  Products
+                </NavLink>
+              </li>
+              <li className="mb-2">
+              <button 
+              onClick={()=>handleLogout()}
+              className="w-full p-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+            >
+              Logout
+            </button>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        {/* Main content */}
+        <main className="flex-1 p-4">
+          <Routes>
+            <Route path="/order" element={<MakeOrder />} />
+            <Route path="/product" element={<CreateProduct />} />
+            <Route path="*" element={<Navigate to="/order" replace />} />
+          </Routes>
+        </main>
+      </div>
     </Router>
-  );
-}
-
-function AuthenticatedApp() {
-  return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <nav className="w-64 bg-white shadow-md">
-        <div className="p-4">
-          <h1 className="text-2xl font-bold mb-4">Delivery App</h1>
-          <ul>
-            <li className="mb-2">
-              <NavLink 
-                to="/make-order" 
-                className={({ isActive }) => 
-                  isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
-                }
-              >
-                Make Order
-              </NavLink>
-            </li>
-            <li className="mb-2">
-              <NavLink 
-                to="/create-product" 
-                className={({ isActive }) => 
-                  isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
-                }
-              >
-                Create Product
-              </NavLink>
-            </li>
-            <li className="mb-2">
-              <NavLink 
-                to="/all-orders" 
-                className={({ isActive }) => 
-                  isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
-                }
-              >
-                All Orders
-              </NavLink>
-            </li>
-            <li className="mb-2">
-              <NavLink 
-                to="/get-all" 
-                className={({ isActive }) => 
-                  isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
-                }
-              >
-                Get All
-              </NavLink>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      {/* Main content */}
-      <main className="flex-1 p-4">
-        <Routes>
-          <Route path="/make-order" element={<MakeOrder />} />
-          <Route path="/create-product" element={<CreateProduct />} />
-          <Route path="/all-orders" element={<GetAllOrders />} />
-          <Route path="/get-all" element={<GetAll />} />
-          <Route path="*" element={<Navigate to="/make-order" replace />} />
-        </Routes>
-      </main>
-    </div>
   );
 }
 
