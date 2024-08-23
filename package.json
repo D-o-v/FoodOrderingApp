@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-  "server": "nodemon src/server.ts",
+  "server": "node src/server.ts",
   "start": "node src/server.ts",
   "build" :"npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
