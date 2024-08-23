@@ -4,7 +4,7 @@ import Login from './components/Login';
 import CreateProduct from './components/CreateProduct';
 import GetAllOrders from './components/GetAllOrders';
 import MakeOrder from './components/MakeOrder';
-import GetAll from './components/GetAll';
+import GetAll from './components/GetAll'
 
 function App() {
   // This should be set to true when the user is authenticated
