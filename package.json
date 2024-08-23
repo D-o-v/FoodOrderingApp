@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node src/server.js",
-    "server": "nodemon src/server.ts",
-    "dev": "nodemon src/server.ts",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+  "server": "nodemon src/server.js",
+  "start": "node src/server.js",
+  "build" :"npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "",
