@@ -110,7 +110,7 @@ function MakeOrder() {
             {products?.map((product) => (
               <li key={product?._id} className="mb-2 flex items-center justify-between">
                 <span>
-                  {product?.name} - ${product?.price}
+                  {product?.name} - ₦{product?.price}
                 </span>
                 <div>
                   <button
@@ -138,12 +138,12 @@ function MakeOrder() {
               const product = products.find((p) => p._id === productId);
               return product ? (
                 <li key={productId} className="mb-2">
-                  {product?.name} - Quantity: {quantity} - Subtotal: ${product?.price * quantity}
+                  {product?.name} x {quantity} - ₦{product?.price * quantity}
                 </li>
               ) : null;
             })}
           </ul>
-          <p className="text-xl mt-4">Total: ${total.toFixed(2)}</p>
+          <p className="text-xl mt-4">Total: ₦{total.toFixed(2)}</p>
           <button
             onClick={handleCheckout}
             className="w-full p-2 bg-blue-500 text-white rounded mt-4"
@@ -168,11 +168,11 @@ function MakeOrder() {
               <ul className="ml-4">
                 {order?.products.map((product, index) => (
                   <li key={index}>
-                    {product?.product?.name} - x {product?.quantity} - Price: ${product?.product?.price}
+                    {product?.product?.name} - x {product?.quantity} - Price: ₦{product?.product?.price}
                   </li>
                 ))}
               </ul>
-              <p className="mt-2">Total: ${order?.total.toFixed(2)}</p>
+              <p className="mt-2">Total: ₦{order?.total.toFixed(2)}</p>
             </li>
           ))}
         </ul>

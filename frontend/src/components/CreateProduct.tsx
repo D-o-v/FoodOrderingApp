@@ -68,7 +68,7 @@ function CreateProduct() {
       <ul>
         {products?.map((product: any) => (
           <li key={product.id} className="mb-2">
-            {product.name} - ${product.price}
+            {product.name} - ₦{product.price}
           </li>
         ))}
       </ul>
