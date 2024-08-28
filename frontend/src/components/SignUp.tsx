@@ -8,6 +8,7 @@ function SignUp({ setIsAuthenticated }:any) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
@@ -16,12 +17,15 @@ function SignUp({ setIsAuthenticated }:any) {
       return;
     }
     try {
+      setLoading(true);
       const { token } = await signUp(username, password);
       sessionStorage.setItem('token', token);
       setIsAuthenticated(true);
       navigate('/order');
     } catch (error) {
       toast.error('Sign up failed');
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -51,7 +55,7 @@ function SignUp({ setIsAuthenticated }:any) {
           className="w-full p-2 mb-4 border rounded"
         />
         <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded">
-          Sign Up
+        {loading?<span className="loading loading-spinner loading-md"></span>:"Sign Up"}
         </button>
         <p className="mt-4">
           Already have an account? <Link to="/login" className="text-blue-500">Login</Link>

@@ -6,17 +6,21 @@ import { toast } from 'react-toastify';
 function Login({ setIsAuthenticated }:any) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e:any) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const { token } = await login(username, password);
       sessionStorage.setItem('token', token);
       setIsAuthenticated(true);
       navigate('/order');
     } catch (error) {
       toast.error('Login failed');
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -40,7 +44,7 @@ function Login({ setIsAuthenticated }:any) {
             className="w-full p-2 mb-4 border rounded"
           />
           <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded">
-            Login
+           {loading?<span className="loading loading-spinner loading-md"></span>:" Login"}
           </button>
           <p className="mt-4">
             Don't have an account? <Link to="/signup" className="text-blue-500">Sign Up</Link>
