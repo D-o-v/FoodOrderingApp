@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { login } from './api';
 import { toast } from 'react-toastify';
+import { encrypt } from './encrypt';
 
-function Login({ setIsAuthenticated }:any) {
+function Login({ setIsAuthenticated ,setStoredUsername}:any) {
   const [username, setUsername] = useState('');
+  const [usernameEncrypted, setUsernameEncrypted] = useState<any>({});
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  
   const navigate = useNavigate();
 
   const handleSubmit = async (e:any) => {
@@ -14,7 +17,9 @@ function Login({ setIsAuthenticated }:any) {
     try {
       setLoading(true);
       const { token } = await login(username, password);
+      setStoredUsername(username);
       sessionStorage.setItem('token', token);
+      sessionStorage.setItem('username', usernameEncrypted)
       setIsAuthenticated(true);
       navigate('/order');
     } catch (error) {
@@ -23,6 +28,9 @@ function Login({ setIsAuthenticated }:any) {
       setLoading(false);
     }
   };
+  useEffect(() => {
+    setUsernameEncrypted(encrypt(username));
+  }, [username]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
