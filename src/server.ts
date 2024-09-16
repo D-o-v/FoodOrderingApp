@@ -3,6 +3,7 @@ import { json } from 'body-parser';
 import cors from 'cors';
 import { connectDB } from './config/database';
 import authRoutes from './routes/authRoutes';
+import adminRoutes from './routes/adminRoutes';
 import productRoutes from './routes/productRoutes';
 import orderRoutes from './routes/orderRoutes';
 import dotenv from 'dotenv';
@@ -39,6 +40,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Connect to MongoDB
 connectDB()

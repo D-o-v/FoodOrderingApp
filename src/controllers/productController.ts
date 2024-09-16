@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { createProduct, getAllProducts } from '../services/productService';
 
-interface CustomRequest extends Request {
-    user?: {
-      id: string;
-    };
-  }
-export const createProductController = async (req: CustomRequest, res: Response): Promise<void> => {
+// interface CustomRequest extends Request {
+//     user?: {
+//       id: string;
+//     };
+//   }
+export const createProductController = async (req:Request, res: Response): Promise<void> => {
   try {
     const { name, price } = req.body;
     const product = await createProduct(name, price);

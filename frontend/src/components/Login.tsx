@@ -4,7 +4,7 @@ import { login } from './api';
 import { toast } from 'react-toastify';
 import { encrypt } from './encrypt';
 
-function Login({ setIsAuthenticated ,setStoredUsername}:any) {
+function Login({ setIsAuthenticated ,setStoredUsername,setUserType}:any) {
   const [username, setUsername] = useState('');
   const [usernameEncrypted, setUsernameEncrypted] = useState<any>({});
   const [password, setPassword] = useState('');
@@ -16,14 +16,16 @@ function Login({ setIsAuthenticated ,setStoredUsername}:any) {
     e.preventDefault();
     try {
       setLoading(true);
-      const { token } = await login(username, password);
+      const { token,userType } = await login(username, password);
+      setUserType(userType);
       setStoredUsername(username);
       sessionStorage.setItem('token', token);
+      sessionStorage.setItem('userType', userType);
       sessionStorage.setItem('username', usernameEncrypted)
       setIsAuthenticated(true);
       navigate('/order');
-    } catch (error) {
-      toast.error('Login failed');
+    } catch (error:any) {
+      toast.error(error.message||"Login failed");
     }finally{
       setLoading(false);
     }
