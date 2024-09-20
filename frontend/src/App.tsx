@@ -49,7 +49,7 @@ function App() {
       </Router>
     );
   }
-console.log("userType",userType);
+
   return (
     <Router>
       <div className="flex h-screen bg-gray-100">

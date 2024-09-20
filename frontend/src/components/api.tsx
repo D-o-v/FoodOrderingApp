@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-const BASE_URL = 'https://foodorderingapp-1.onrender.com/api';
-// const BASE_URL = 'http://localhost:5000/api';
+// const BASE_URL = 'https://foodorderingapp-1.onrender.com/api';
+const BASE_URL = 'http://localhost:5000/api';
 
 
 

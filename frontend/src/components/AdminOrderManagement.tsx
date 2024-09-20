@@ -92,7 +92,7 @@ function AdminOrderManagement() {
     const lowercasedQuery = searchQuery.toLowerCase();
     const filtered = orders.filter((order) =>
       order._id.toLowerCase().includes(lowercasedQuery) ||
-      order.user.username.toLowerCase().includes(lowercasedQuery) ||
+      order.user?.username.toLowerCase().includes(lowercasedQuery) ||
       order.status.toLowerCase().includes(lowercasedQuery)
     );
     setFilteredOrders(filtered);
@@ -106,7 +106,7 @@ function AdminOrderManagement() {
     },
     {
       name: 'User',
-      selector: (row) => row.user.username,
+      selector: (row) => row.user?.username,
       sortable: true,
     },
     {
@@ -218,7 +218,7 @@ function AdminOrderManagement() {
     
     const tableData = ordersToDownload.map(order => [
       order._id,
-      order.user.username,
+      order.user?.username,
       `₦${order.total.toFixed(2)}`,
       new Date(order.date).toLocaleString(),
       order.status
@@ -264,7 +264,7 @@ function AdminOrderManagement() {
           ${ordersToRender.map(order => `
             <tr>
               <td>${order._id}</td>
-              <td>${order.user.username}</td>
+              <td>${order.user?.username}</td>
               <td>₦${order.total.toFixed(2)}</td>
               <td>${new Date(order.date).toLocaleString()}</td>
               <td>${order.status}</td>
@@ -318,7 +318,7 @@ function AdminOrderManagement() {
       }
       
       doc.setFontSize(14);
-      doc.text(`User: ${order.user.username}`, 14, 50);
+      doc.text(`User: ${order.user?.username}`, 14, 50);
 
       const tableData = order.products.map(item => [
         item.product.name,
@@ -349,7 +349,7 @@ function AdminOrderManagement() {
   const generateVendorReportContent = (ordersToRender: Order[]) => {
     return ordersToRender.map(order => `
       <div style="margin-bottom: 40px; page-break-after: always;">
-        <p><strong>User:</strong> ${order.user.username}</p>
+        <p><strong>User:</strong> ${order.user?.username}</p>
         <table>
           <thead>
             <tr>
@@ -490,7 +490,7 @@ function AdminOrderManagement() {
             </div>
             <div className="space-y-3 sm:space-y-4">
               <p><strong>Order ID:</strong> {selectedOrder._id}</p>
-              <p><strong>User:</strong> {selectedOrder.user.username}</p>
+              <p><strong>User:</strong> {selectedOrder.user?.username}</p>
               <p><strong>Date:</strong> {new Date(selectedOrder.date).toLocaleString()}</p>
               <p><strong>Status:</strong> <span className={`px-2 py-1 rounded ${statusColors[selectedOrder.status.toLowerCase()] || 'bg-gray-200'}`}>{selectedOrder.status}</span></p>
               <div>
