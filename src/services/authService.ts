@@ -9,12 +9,13 @@ interface AuthResponse {
 }
 
 export const signUp = async (username: string, password: string): Promise<AuthResponse> => {
-  const existingUser = await User.findOne({ username });
+  const lowercaseUsername = username.toLowerCase();
+  const existingUser = await User.findOne({ username: lowercaseUsername });
   if (existingUser) {
     throw new Error('Username already exists');
   }
 
-  const user = new User({ username, password, type: 'user' });
+  const user = new User({ username: lowercaseUsername, password, type: 'user' });
   await user.save();
 
   const token = jwt.sign({ userId: user._id, userType: user.type }, JWT_SECRET, { expiresIn: '1d' });
@@ -22,7 +23,8 @@ export const signUp = async (username: string, password: string): Promise<AuthRe
 };
 
 export const login = async (username: string, password: string): Promise<AuthResponse> => {
-  const user = await User.findOne({ username });
+  const lowercaseUsername = username.toLowerCase();
+  const user = await User.findOne({ username: lowercaseUsername });
   if (!user) {
     throw new Error('Invalid credentials');
   }

@@ -16,9 +16,9 @@ function Login({ setIsAuthenticated ,setStoredUsername,setUserType}:any) {
     e.preventDefault();
     try {
       setLoading(true);
-      const { token,userType } = await login(username, password);
+      const { token,userType } = await login(username?.toLowerCase(), password);
       setUserType(userType);
-      setStoredUsername(username);
+      setStoredUsername(username?.toLowerCase());
       sessionStorage.setItem('token', token);
       sessionStorage.setItem('userType', userType);
       sessionStorage.setItem('username', usernameEncrypted)
@@ -31,7 +31,7 @@ function Login({ setIsAuthenticated ,setStoredUsername,setUserType}:any) {
     }
   };
   useEffect(() => {
-    setUsernameEncrypted(encrypt(username));
+    setUsernameEncrypted(encrypt(username?.toLowerCase()));
   }, [username]);
 
   return (

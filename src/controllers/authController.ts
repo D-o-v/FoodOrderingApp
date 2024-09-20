@@ -5,7 +5,7 @@ export const signUpController = async (req: Request, res: Response): Promise<voi
   try {
     console.log("req.body", req.body);
     const { username, password } = req.body;
-    const { token, userType } = await signUp(username, password);
+    const { token, userType } = await signUp(username?.toLowerCase(), password);
     res.status(201).json({ token, userType });
   } catch (error: any) {
     res.status(400).json({ error: error.message });
@@ -15,7 +15,7 @@ export const signUpController = async (req: Request, res: Response): Promise<voi
 export const loginController = async (req: Request, res: Response): Promise<void> => {
   try {
     const { username, password } = req.body;
-    const { token, userType } = await login(username, password);
+    const { token, userType } = await login(username?.toLowerCase(), password);
     res.status(200).json({ token, userType });
   } catch (error: any) {
     res.status(401).json({ error: error.message });

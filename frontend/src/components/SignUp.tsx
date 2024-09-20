@@ -23,7 +23,7 @@ function SignUp({ setIsAuthenticated, setUserType }: SignUpProps) {
     }
     try {
       setLoading(true);
-      const { token, userType } = await signUp(username, password);
+      const { token, userType } = await signUp(username?.toLowerCase(), password);
       sessionStorage.setItem('token', token);
       sessionStorage.setItem('userType', userType);
       setIsAuthenticated(true);
