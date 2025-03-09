@@ -52,34 +52,62 @@ function App() {
 
   return (
     <Router>
-      <div className="flex h-screen bg-gray-100">
+      <div className="bg-gradient-to-br from-orange-400 to-amber-600 min-h-screen">
         {/* Mobile menu button */}
         <button
-          className="fixed top-4 left-4 z-20 md:hidden"
+          className="fixed top-6 left-6 z-50 md:hidden bg-white/20 backdrop-blur-lg p-3 rounded-full shadow-lg border border-white/30 text-white transition-all duration-300 hover:bg-white/30"
           onClick={toggleSidebar}
+          aria-label="Toggle Menu"
         >
-          {isSidebarOpen ? '✕' : '☰'}
+          {isSidebarOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
         </button>
 
-        {/* Sidebar */}
+        {/* Sidebar - Fixed on all screens */}
         <div
-          className={`fixed inset-y-0 left-0 transform ${
-            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } md:relative md:translate-x-0 transition duration-200 ease-in-out z-10 w-64 bg-white shadow-lg`}
+          className={`fixed top-0 left-0 h-full w-64 md:w-72 z-40 transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+          }`}
         >
-          <div className="p-6">
-            <h1 className="text-2xl font-semibold text-gray-800 mb-5">Delivery App</h1>
-            <nav>
-              <ul className="space-y-2">
+          <div className="h-full backdrop-blur-xl bg-white/20 border-r border-white/30 shadow-2xl p-6 flex flex-col overflow-y-auto">
+            <div className="flex items-center space-x-3 mb-8">
+              <div className="bg-gradient-to-r from-amber-500 to-orange-600 w-10 h-10 rounded-full flex items-center justify-center shadow-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+              </div>
+              <h1 className="text-2xl font-bold text-white drop-shadow-md">FoodDelivery</h1>
+            </div>
+            
+            <div className="mb-8 py-3 px-4 bg-white/30 rounded-xl backdrop-blur-sm border border-white/30">
+              <div className="text-white/70 text-sm">Welcome,</div>
+              <div className="text-white font-bold text-lg truncate">{username}</div>
+              <div className="text-white/80 text-xs mt-1 uppercase tracking-wider">{userType} account</div>
+            </div>
+            
+            <nav className="flex-1">
+              <ul className="space-y-3">
                 <li>
                   <NavLink
                     to="/order"
                     className={({ isActive }) =>
-                      isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
+                      isActive 
+                        ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
+                        : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
                     }
                     onClick={() => setIsSidebarOpen(false)}
                   >
-                    Order
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                    Order Food
                   </NavLink>
                 </li>
                 {userType === 'admin' && (
@@ -88,62 +116,90 @@ function App() {
                       <NavLink
                         to="/products"
                         className={({ isActive }) =>
-                          isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
+                          isActive 
+                            ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
+                            : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
                         }
                         onClick={() => setIsSidebarOpen(false)}
                       >
-                        Products Mgt
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        Products Management
                       </NavLink>
                     </li>
                     <li>
                       <NavLink
                         to="/admin"
                         className={({ isActive }) =>
-                          isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
+                          isActive 
+                            ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
+                            : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
                         }
                         onClick={() => setIsSidebarOpen(false)}
                       >
-                        Order Mgt
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                        Order Management
                       </NavLink>
                     </li>
                     <li>
                       <NavLink
                         to="/fee-management"
                         className={({ isActive }) =>
-                          isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
+                          isActive 
+                            ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
+                            : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
                         }
                         onClick={() => setIsSidebarOpen(false)}
                       >
-                        Fee Mgt
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Fee Management
                       </NavLink>
                     </li>
                     <li>
                       <NavLink
                         to="/user-management"
                         className={({ isActive }) =>
-                          isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
+                          isActive 
+                            ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
+                            : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
                         }
                         onClick={() => setIsSidebarOpen(false)}
                       >
-                        User Mgt
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        User Management
                       </NavLink>
                     </li>
                   </>
                 )}
               </ul>
             </nav>
+            
             <button
               onClick={handleLogout}
-              className="mt-4 w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
+              className="mt-6 w-full py-3 px-4 bg-white/20 hover:bg-white/30 text-white rounded-xl transition-all duration-300 transform hover:scale-[1.02] backdrop-blur-sm border border-white/30 shadow-md flex items-center justify-center"
             >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
               Logout
             </button>
+            
+            <div className="mt-8 text-xs text-white/50 text-center">
+              FoodDelivery App © 2025
+            </div>
           </div>
         </div>
 
-        {/* Main content */}
-        <div className="flex-1 p-10 overflow-y-auto">
-          <div className="max-w-4xl mx-auto">
+        {/* Main content - Scrollable with margin to accommodate fixed sidebar */}
+        <div className="md:ml-72 min-h-screen">
+          <div className="p-4 md:p-8 min-h-screen overflow-y-auto">
             <Routes>
               <Route path="/order" element={<MakeOrder username={username} />} />
               {userType === 'admin' && (
@@ -162,7 +218,7 @@ function App() {
         {/* Overlay for mobile */}
         {isSidebarOpen && (
           <div
-            className="fixed inset-0 bg-black opacity-50 z-0 md:hidden"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-30 md:hidden"
             onClick={() => setIsSidebarOpen(false)}
           ></div>
         )}
@@ -172,311 +228,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { BrowserRouter as Router, Route, Routes, Navigate, NavLink } from 'react-router-dom';
-// import SignUp from './components/SignUp';
-// import Login from './components/Login';
-// import CreateProduct from './components/CreateProduct';
-// import MakeOrder from './components/MakeOrder';
-// import AdminOrderManagement from './components/AdminOrderManagement';
-// import { useEffect, useState } from 'react';
-// import { decrypt } from './components/decrypt';
-
-// function App() {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-//   const [username, setUsername] = useState('');
-
-//   useEffect(() => {
-//     const token = sessionStorage.getItem("token");
-//     const storedUsername = sessionStorage.getItem("username") ||'';
-//     const decryptedUsername = decrypt(storedUsername)
-//     setIsAuthenticated(!!token);
-//     setUsername(decryptedUsername);
-//   }, []);
-
-//   const handleLogout = () => {
-//     sessionStorage.removeItem("token");
-//     sessionStorage.removeItem("username");
-//     setIsAuthenticated(false);
-//     setUsername('');
-//   };
-
-//   const toggleSidebar = () => {
-//     setIsSidebarOpen(!isSidebarOpen);
-//   };
-
-//   if (!isAuthenticated ||!username) {
-//     return (
-//       <Router>
-//         <Routes>
-//           <Route path="/signup" element={<SignUp />} />
-//           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} setStoredUsername={setUsername} />} />
-//           <Route path="*" element={<Navigate to="/login" />} />
-//         </Routes>
-//       </Router>
-//     );
-//   }
-
-//   return (
-//     <Router>
-//       <div className="flex h-screen bg-gray-100">
-//         {/* Mobile menu button */}
-//         <button
-//           className="fixed top-4 left-4 z-20 md:hidden"
-//           onClick={toggleSidebar}
-//         >
-//           {isSidebarOpen ? '✕' : '☰'}
-//         </button>
-
-//         {/* Sidebar */}
-//         <div
-//           className={`fixed inset-y-0 left-0 transform ${
-//             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-//           } md:relative md:translate-x-0 transition duration-200 ease-in-out z-10 w-64 bg-white shadow-lg`}
-//         >
-//           <div className="p-6">
-//             <h1 className="text-2xl font-semibold text-gray-800 mb-5">Delivery App</h1>
-//             <nav>
-//               <ul className="space-y-2">
-//                 <li>
-//                   <NavLink
-//                     to="/order"
-//                     className={({ isActive }) =>
-//                       isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
-//                     }
-//                     onClick={() => setIsSidebarOpen(false)}
-//                   >
-//                     Order
-//                   </NavLink>
-//                 </li>
-//                 {username === 'odun' && (
-//                   <>
-//                     <li>
-//                       <NavLink
-//                         to="/products"
-//                         className={({ isActive }) =>
-//                           isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
-//                         }
-//                         onClick={() => setIsSidebarOpen(false)}
-//                       >
-//                         Products Mgt
-//                       </NavLink>
-//                     </li>
-//                     <li>
-//                       <NavLink
-//                         to="/admin"
-//                         className={({ isActive }) =>
-//                           isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
-//                         }
-//                         onClick={() => setIsSidebarOpen(false)}
-//                       >
-//                         Order Mgt
-//                       </NavLink>
-//                     </li>
-//                   </>
-//                 )}
-//               </ul>
-//             </nav>
-//             <button
-//               onClick={handleLogout}
-//               className="mt-4 w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
-//             >
-//               Logout
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* Main content */}
-//         <div className="flex-1 p-10 overflow-y-auto">
-//           <div className="max-w-4xl mx-auto">
-//             <Routes>
-//               <Route path="/order" element={<MakeOrder username={username} />} />
-//               {username === 'odun' && (
-//                 <>
-//                   <Route path="/products" element={<CreateProduct />} />
-//                   <Route path="/admin" element={<AdminOrderManagement />} />
-//                 </>
-//               )}
-//               <Route path="*" element={<Navigate to="/order" />} />
-//             </Routes>
-//           </div>
-//         </div>
-
-//         {/* Overlay for mobile */}
-//         {isSidebarOpen && (
-//           <div
-//             className="fixed inset-0 bg-black opacity-50 z-0 md:hidden"
-//             onClick={() => setIsSidebarOpen(false)}
-//           ></div>
-//         )}
-//       </div>
-//     </Router>
-//   );
-// }
-
-// export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { BrowserRouter as Router, Route, Routes, Navigate, NavLink } from 'react-router-dom';
-// import SignUp from './components/SignUp';
-// import Login from './components/Login';
-// import CreateProduct from './components/CreateProduct';
-// import MakeOrder from './components/MakeOrder';
-// import { useEffect, useState } from 'react';
-
-// function App() {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-//   useEffect(() => {
-//     const token = sessionStorage.getItem("token");
-//     setIsAuthenticated(!!token);
-//   }, []);
-
-//   const handleLogout = () => {
-//     sessionStorage.removeItem("token");
-//     setIsAuthenticated(false);
-//   };
-
-//   const toggleSidebar = () => {
-//     setIsSidebarOpen(!isSidebarOpen);
-//   };
-
-//   if (!isAuthenticated) {
-//     return (
-//       <Router>
-//         <Routes>
-//           <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-//           <Route path="/signup" element={<SignUp setIsAuthenticated={setIsAuthenticated} />} />
-//           <Route path="*" element={<Navigate to="/login" replace />} />
-//         </Routes>
-//       </Router>
-//     );
-//   }
-
-//   return (
-//     <Router>
-//       <div className="flex flex-col min-h-screen bg-gray-100 lg:flex-row">
-//         {/* Mobile menu button */}
-//         <button
-//           className="lg:hidden fixed top-4 left-4 z-20 p-2 bg-blue-500 text-white rounded"
-//           onClick={toggleSidebar}
-//         >
-//           {isSidebarOpen ? '✕' : '☰'}
-//         </button>
-
-//         {/* Sidebar */}
-//         <nav className={`w-64 bg-white shadow-md flex-shrink-0 fixed inset-y-0 left-0 z-30 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition duration-200 ease-in-out overflow-y-auto`}>
-//           <div className="p-4 h-full flex flex-col">
-//             <h1 className="text-2xl font-bold mb-4">Delivery App</h1>
-//             <ul className="flex-grow">
-//               <li className="mb-2">
-//                 <NavLink 
-//                   to="/order" 
-//                   className={({ isActive }) => 
-//                     isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
-//                   }
-//                   onClick={() => setIsSidebarOpen(false)}
-//                 >
-//                   Order
-//                 </NavLink>
-//               </li>
-//               <li className="mb-2">
-//                 <NavLink 
-//                   to="/product" 
-//                   className={({ isActive }) => 
-//                     isActive ? "block p-2 bg-blue-500 text-white rounded" : "block p-2 hover:bg-gray-200 rounded"
-//                   }
-//                   onClick={() => setIsSidebarOpen(false)}
-//                 >
-//                   Products
-//                 </NavLink>
-//               </li>
-//             </ul>
-//             <button 
-//               onClick={handleLogout}
-//               className="w-full p-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors mt-auto"
-//             >
-//               Logout
-//             </button>
-//           </div>
-//         </nav>
-
-//         {/* Main content */}
-//         <main className="flex-grow p-4 w-full lg:ml-64">
-//           <div className="max-w-7xl mx-auto">
-//             <Routes>
-//               <Route path="/order" element={<MakeOrder />} />
-//               <Route path="/product" element={<CreateProduct />} />
-//               <Route path="*" element={<Navigate to="/order" replace />} />
-//             </Routes>
-//           </div>
-//         </main>
-
-//         {/* Overlay for mobile */}
-//         {isSidebarOpen && (
-//           <div 
-//             className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden" 
-//             onClick={() => setIsSidebarOpen(false)}
-//           ></div>
-//         )}
-//       </div>
-//     </Router>
-//   );
-// }
-
-// export default App;
