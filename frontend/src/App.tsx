@@ -8,12 +8,14 @@ import FeeManagement from './components/FeeManagement';
 import UserManagement from './components/UserManagement';
 import { useEffect, useState } from 'react';
 import { decrypt } from './components/decrypt';
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 
-function App() {
+function AppContent() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [username, setUsername] = useState('');
   const [userType, setUserType] = useState('');
+  const { isDarkMode, toggleTheme } = useTheme();
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
@@ -52,10 +54,18 @@ function App() {
 
   return (
     <Router>
-      <div className="bg-gradient-to-br from-orange-400 to-amber-600 min-h-screen">
+      <div className={`min-h-screen transition-colors duration-300 ${
+        isDarkMode 
+          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+          : 'bg-gradient-to-br from-gray-50 to-white'
+      }`}>
         {/* Mobile menu button */}
         <button
-          className="fixed top-6 left-6 z-50 md:hidden bg-white/20 backdrop-blur-lg p-3 rounded-full shadow-lg border border-white/30 text-white transition-all duration-300 hover:bg-white/30"
+          className={`fixed top-6 left-6 z-50 md:hidden backdrop-blur-lg p-3 rounded-full shadow-lg border transition-all duration-300 ${
+            isDarkMode
+              ? 'bg-gray-800/80 border-gray-600 text-white hover:bg-gray-700/80'
+              : 'bg-white/80 border-gray-200 text-gray-700 hover:bg-white/90'
+          }`}
           onClick={toggleSidebar}
           aria-label="Toggle Menu"
         >
@@ -76,20 +86,61 @@ function App() {
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
           }`}
         >
-          <div className="h-full backdrop-blur-xl bg-white/20 border-r border-white/30 shadow-2xl p-6 flex flex-col overflow-y-auto">
-            <div className="flex items-center space-x-3 mb-8">
-              <div className="bg-gradient-to-r from-amber-500 to-orange-600 w-10 h-10 rounded-full flex items-center justify-center shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
+          <div className={`h-full backdrop-blur-xl border-r shadow-2xl p-6 flex flex-col overflow-y-auto transition-colors duration-300 ${
+            isDarkMode
+              ? 'bg-gray-900/90 border-gray-700'
+              : 'bg-white/90 border-gray-200'
+          }`}>
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center space-x-3">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg ${
+                  isDarkMode
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600'
+                    : 'bg-gradient-to-r from-blue-500 to-indigo-600'
+                }`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </div>
+                <h1 className={`text-2xl font-bold drop-shadow-md ${
+                  isDarkMode ? 'text-white' : 'text-gray-800'
+                }`}>FoodDelivery</h1>
               </div>
-              <h1 className="text-2xl font-bold text-white drop-shadow-md">FoodDelivery</h1>
+              <button
+                onClick={toggleTheme}
+                className={`p-2 rounded-lg transition-colors duration-200 ${
+                  isDarkMode
+                    ? 'bg-gray-700 hover:bg-gray-600 text-yellow-400'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                }`}
+                aria-label="Toggle theme"
+              >
+                {isDarkMode ? (
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                  </svg>
+                )}
+              </button>
             </div>
             
-            <div className="mb-8 py-3 px-4 bg-white/30 rounded-xl backdrop-blur-sm border border-white/30">
-              <div className="text-white/70 text-sm">Welcome,</div>
-              <div className="text-white font-bold text-lg truncate">{username}</div>
-              <div className="text-white/80 text-xs mt-1 uppercase tracking-wider">{userType} account</div>
+            <div className={`mb-8 py-3 px-4 rounded-xl backdrop-blur-sm border transition-colors duration-300 ${
+              isDarkMode
+                ? 'bg-gray-800/50 border-gray-600'
+                : 'bg-gray-100/80 border-gray-200'
+            }`}>
+              <div className={`text-sm ${
+                isDarkMode ? 'text-gray-300' : 'text-gray-600'
+              }`}>Welcome,</div>
+              <div className={`font-bold text-lg truncate ${
+                isDarkMode ? 'text-white' : 'text-gray-800'
+              }`}>{username}</div>
+              <div className={`text-xs mt-1 uppercase tracking-wider ${
+                isDarkMode ? 'text-gray-400' : 'text-gray-500'
+              }`}>{userType} account</div>
             </div>
             
             <nav className="flex-1">
@@ -99,8 +150,16 @@ function App() {
                     to="/order"
                     className={({ isActive }) =>
                       isActive 
-                        ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
-                        : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
+                        ? `flex items-center p-3 rounded-xl shadow-md transition-all duration-300 transform ${
+                            isDarkMode
+                              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                              : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                          }`
+                        : `flex items-center p-3 rounded-xl transition-all duration-300 ${
+                            isDarkMode
+                              ? 'hover:bg-gray-700 text-gray-200'
+                              : 'hover:bg-gray-100 text-gray-700'
+                          }`
                     }
                     onClick={() => setIsSidebarOpen(false)}
                   >
@@ -117,8 +176,16 @@ function App() {
                         to="/products"
                         className={({ isActive }) =>
                           isActive 
-                            ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
-                            : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
+                            ? `flex items-center p-3 rounded-xl shadow-md transition-all duration-300 transform ${
+                                isDarkMode
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                                  : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                              }`
+                            : `flex items-center p-3 rounded-xl transition-all duration-300 ${
+                                isDarkMode
+                                  ? 'hover:bg-gray-700 text-gray-200'
+                                  : 'hover:bg-gray-100 text-gray-700'
+                              }`
                         }
                         onClick={() => setIsSidebarOpen(false)}
                       >
@@ -133,8 +200,16 @@ function App() {
                         to="/admin"
                         className={({ isActive }) =>
                           isActive 
-                            ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
-                            : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
+                            ? `flex items-center p-3 rounded-xl shadow-md transition-all duration-300 transform ${
+                                isDarkMode
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                                  : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                              }`
+                            : `flex items-center p-3 rounded-xl transition-all duration-300 ${
+                                isDarkMode
+                                  ? 'hover:bg-gray-700 text-gray-200'
+                                  : 'hover:bg-gray-100 text-gray-700'
+                              }`
                         }
                         onClick={() => setIsSidebarOpen(false)}
                       >
@@ -149,8 +224,16 @@ function App() {
                         to="/fee-management"
                         className={({ isActive }) =>
                           isActive 
-                            ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
-                            : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
+                            ? `flex items-center p-3 rounded-xl shadow-md transition-all duration-300 transform ${
+                                isDarkMode
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                                  : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                              }`
+                            : `flex items-center p-3 rounded-xl transition-all duration-300 ${
+                                isDarkMode
+                                  ? 'hover:bg-gray-700 text-gray-200'
+                                  : 'hover:bg-gray-100 text-gray-700'
+                              }`
                         }
                         onClick={() => setIsSidebarOpen(false)}
                       >
@@ -165,8 +248,16 @@ function App() {
                         to="/user-management"
                         className={({ isActive }) =>
                           isActive 
-                            ? "flex items-center p-3 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-xl shadow-md transition-all duration-300 transform border border-white/20"
-                            : "flex items-center p-3 hover:bg-white/30 text-white rounded-xl transition-all duration-300 backdrop-blur-sm"
+                            ? `flex items-center p-3 rounded-xl shadow-md transition-all duration-300 transform ${
+                                isDarkMode
+                                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                                  : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white'
+                              }`
+                            : `flex items-center p-3 rounded-xl transition-all duration-300 ${
+                                isDarkMode
+                                  ? 'hover:bg-gray-700 text-gray-200'
+                                  : 'hover:bg-gray-100 text-gray-700'
+                              }`
                         }
                         onClick={() => setIsSidebarOpen(false)}
                       >
@@ -183,7 +274,11 @@ function App() {
             
             <button
               onClick={handleLogout}
-              className="mt-6 w-full py-3 px-4 bg-white/20 hover:bg-white/30 text-white rounded-xl transition-all duration-300 transform hover:scale-[1.02] backdrop-blur-sm border border-white/30 shadow-md flex items-center justify-center"
+              className={`mt-6 w-full py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-md flex items-center justify-center ${
+                isDarkMode
+                  ? 'bg-red-600 hover:bg-red-700 text-white border border-red-500'
+                  : 'bg-red-500 hover:bg-red-600 text-white border border-red-400'
+              }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -191,7 +286,9 @@ function App() {
               Logout
             </button>
             
-            <div className="mt-8 text-xs text-white/50 text-center">
+            <div className={`mt-8 text-xs text-center ${
+              isDarkMode ? 'text-gray-500' : 'text-gray-400'
+            }`}>
               FoodDelivery App © 2025
             </div>
           </div>
@@ -224,6 +321,14 @@ function App() {
         )}
       </div>
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   );
 }
 

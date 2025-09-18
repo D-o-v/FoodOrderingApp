@@ -76,6 +76,23 @@ export const getAllProducts = async (): Promise<ProductData[]> => {
   }
 };
 
+export const updateProduct = async (productId: string, productData: ProductData): Promise<ProductData> => {
+  try {
+    const response = await api.put(`/products/${productId}`, productData);
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error||error.response?.data?.message || 'Failed to update product');
+  }
+};
+
+export const deleteProduct = async (productId: string): Promise<void> => {
+  try {
+    await api.delete(`/products/${productId}`);
+  } catch (error: any) {
+    throw new Error(error.response?.data?.error||error.response?.data?.message || 'Failed to delete product');
+  }
+};
+
 // Order Endpoints
 export const createOrder = async (orderData: OrderData|any): Promise<OrderData> => {
   try {

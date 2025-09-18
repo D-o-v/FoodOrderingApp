@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { PencilIcon, TrashIcon, RotateCcwIcon } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 import palmpayLogo from '../../public/palmpay.png'
 
 interface Product {
@@ -47,7 +48,8 @@ function MakeOrder({ username }: { username: string }) {
   const [confirmAction, setConfirmAction] = useState<() => Promise<void>>(() => async () => {});
   const [confirmMessage, setConfirmMessage] = useState('');
   const[ deliveryFee,setDeliveryFee] = useState(0);
-  const accountNumber=8168847049
+  const accountNumber=8168847049;
+  const { isDarkMode } = useTheme();
 
   const fetchProducts = async () => {
     try {
@@ -341,14 +343,46 @@ function MakeOrder({ username }: { username: string }) {
   }, [selectedProducts, products]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-400 to-amber-600 p-4 md:p-6 ">
+    <div className={`min-h-screen p-4 md:p-6 transition-colors duration-300 ${
+      isDarkMode 
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+        : 'bg-gradient-to-br from-gray-50 to-white'
+    }`}>
       <div className="container mx-auto max-w-6xl">
-        <h2 className="text-4xl font-bold mb-8 text-center text-white drop-shadow-lg">Make Order</h2>
+        <div className="flex items-center justify-center space-x-4 mb-8">
+          <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+            isDarkMode
+              ? 'bg-gradient-to-r from-blue-600 to-purple-600'
+              : 'bg-gradient-to-r from-blue-500 to-indigo-600'
+          }`}>
+            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+          </div>
+          <h2 className={`text-4xl font-bold drop-shadow-lg ${
+            isDarkMode ? 'text-white' : 'text-gray-800'
+          }`}>Make Order</h2>
+        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Products Selection Panel */}
-          <div className="backdrop-blur-xl bg-white/20 p-6 md:p-8 rounded-2xl shadow-xl border border-white/30 transition-all duration-300 hover:shadow-2xl">
-            <h3 className="text-2xl font-semibold mb-6 text-gray-700">Available Products</h3>
+          <div className={`p-6 md:p-8 rounded-2xl shadow-xl border transition-all duration-300 hover:shadow-2xl ${
+            isDarkMode
+              ? 'bg-gray-800/90 border-gray-700 backdrop-blur-xl'
+              : 'bg-white/90 border-gray-200 backdrop-blur-xl'
+          }`}>
+            <div className="flex items-center space-x-3 mb-6">
+              <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                isDarkMode ? 'bg-green-600' : 'bg-green-500'
+              }`}>
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
+              <h3 className={`text-2xl font-semibold ${
+                isDarkMode ? 'text-white' : 'text-gray-800'
+              }`}>Available Products</h3>
+            </div>
             {loadingProducts ? (
               <div className="flex justify-center items-center h-64">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>

@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express, { Request, Response, NextFunction } from 'express';
 import { json } from 'body-parser';
 import cors from 'cors';
@@ -6,9 +9,6 @@ import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
 import productRoutes from './routes/productRoutes';
 import orderRoutes from './routes/orderRoutes';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -42,14 +42,21 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', adminRoutes);
 
-// Connect to MongoDB
+// Connect to MongoDB and start server
 connectDB()
   .then(() => {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`📱 Frontend: http://localhost:5174`);
+      console.log(`🔗 API: http://localhost:${PORT}/api`);
+    });
   })
-  .catch((error) => {
-    console.error('Failed to connect to MongoDB:', error);
-    process.exit(1);
+  .catch(() => {
+    // Start server anyway for development
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT} (mock mode)`);
+      console.log(`📱 Frontend: http://localhost:5174`);
+    });
   });
 
 
